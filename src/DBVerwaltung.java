@@ -269,6 +269,8 @@ public class DBVerwaltung {
 
 			stmt.executeUpdate();
 			System.out.println("Lieferer erfolgreich hinzugefügt");
+			
+			stmt.close();
 		} catch (SQLException e) {
 			System.out.println("Fehler beim schreiben in die Datenbank");
 			e.printStackTrace();
