@@ -44,19 +44,19 @@ BEGIN
             anrede,
             vorname,
             nachname, 
-            geburtstagsdatum,
+            geburtsdatum,
             strasse,
             wohnort,
             plz,
-            telefonnummer,
+            tel,
             mail,
             beschreibung,
-            kontonummmer,
+            konto_nr,
             blz,
             bankname);
 
     INSERT INTO `Lieferer_Lieferbezirk`
-    VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis);
+    VALUES (idBezirk, idLieferer, lieferzeit, lieferpreis);
 
     OPEN gic;
         WHILE done = 0 DO
