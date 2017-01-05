@@ -1,6 +1,11 @@
 import java.sql.Connection;
 import java.util.Scanner;
 
+/**
+ * Bonusaufgabe Datenbanken 1
+ *
+ * @author Sebastian Donath, Christoph Weinzierl
+ */
 public class main {
 
 	public static void main(String[] args) {

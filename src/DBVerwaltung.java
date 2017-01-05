@@ -6,12 +6,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.CallableStatement;
 
+/**
+ * Datenbank Verwaltung
+ *
+ * @author Sebastian Donath, Christoph Weinzierl
+ */
 public class DBVerwaltung {
 
+	/**
+	 * Konfiguration der Konnektion zur Datenbank Lieferservice Venenum
+	 * @return DB Connection to venenumbonus
+	 */
 	public Connection connect() {
 
 		Connection conn = null;
-
+		
+		//Konfiguration
 		String host = "jdbc:mysql://localhost:3306/";
 		String dbName = "venenumbonus";
 		String username = "root";
@@ -44,6 +54,11 @@ public class DBVerwaltung {
 		return conn;
 	}
 
+	/**
+	 * Boilerplate disconnect
+	 * @param conn Connection to disconnect
+	 * @return disconnected Connection
+	 */
 	public Connection disconnect(Connection conn) {
 		try {
 			conn.close();
@@ -55,6 +70,11 @@ public class DBVerwaltung {
 		return conn;
 	}
 
+	/**
+	 * 
+	 * @param conn
+	 * @param postleitzahl
+	 */
 	public void LieferbezirkAusgabe(Connection conn, int postleitzahl) {
 		int idLieferbezirk = 0;
 
@@ -109,8 +129,8 @@ public class DBVerwaltung {
 		}
 	}
 
-	/****
-	 * Aufgabe 2b/2c
+	/**
+	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch Zuweisungen
 	 * 
 	 * @param vorname Vorname des Lieferers
 	 * @param liefererId Lieferer ID
@@ -129,7 +149,6 @@ public class DBVerwaltung {
 		String konto_nr = "7095465";
 		String blz = "12345678";
 		String bankname = "Geldhaus";
-		int idLieferbezirk = 2;
 		String lieferzeit = "12:00 bis 13:35 Uhr";
 		Double lieferpreis = 42.42;
 		String getraenkemarktName = "Top";
