@@ -15,13 +15,14 @@ public class DBVerwaltung {
 
 	/**
 	 * Konfiguration der Konnektion zur Datenbank Lieferservice Venenum
+	 * 
 	 * @return DB Connection to venenumbonus
 	 */
 	public Connection connect() {
 
 		Connection conn = null;
-		
-		//Konfiguration
+
+		// Konfiguration
 		String host = "jdbc:mysql://localhost:3306/";
 		String dbName = "venenumbonus";
 		String username = "root";
@@ -56,7 +57,9 @@ public class DBVerwaltung {
 
 	/**
 	 * Boilerplate disconnect
-	 * @param conn Connection to disconnect
+	 * 
+	 * @param conn
+	 *            Connection to disconnect
 	 * @return disconnected Connection
 	 */
 	public Connection disconnect(Connection conn) {
@@ -71,9 +74,12 @@ public class DBVerwaltung {
 	}
 
 	/**
+	 * call all outputs
 	 * 
 	 * @param conn
-	 * @param postleitzahl
+	 *            DB Connection
+	 * @param Postleitzahl
+	 *            des Lieferbezirks
 	 */
 	public void LieferbezirkAusgabe(Connection conn, int postleitzahl) {
 		int idLieferbezirk = 0;
@@ -92,19 +98,24 @@ public class DBVerwaltung {
 			System.out.println("Ung�ltige Postleitzahl: " + postleitzahl + "\n g�ltige zahlen sind: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
 
-		if(this.LieferbezirkIstGleichNull(conn, idLieferbezirk) == true){
-		    System.out.println("Lieferbezirk ohne Lieferer");
-		}else{
-		this.getAnzahlLieferer(conn, idLieferbezirk);
-		this.getLieferer(conn, idLieferbezirk);
+		if (this.LieferbezirkIstGleichNull(conn, idLieferbezirk) == true) {
+			System.out.println("Lieferbezirk ohne Lieferer");
+		} else {
+			this.getAnzahlLieferer(conn, idLieferbezirk);
+			this.getLieferer(conn, idLieferbezirk);
 		}
 	}
 
+	/**
+	 * print out Lieferer
+	 * 
+	 * @param conn
+	 * @param idLieferbezirk
+	 */
 	public void getLieferer(Connection conn, int idLieferbezirk) {
 		try {
-
-			String sqlString = "Select Lieferer_idLieferer " + "from `lieferer_lieferbezirk` "
-					+ "where Lieferbezirk_idLieferbezirk = ?";
+			String sqlString = "SELECT Lieferer_idLieferer " + "FROM `lieferer_lieferbezirk` "
+					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
@@ -124,10 +135,13 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch Zuweisungen
+	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch
+	 * Zuweisungen
 	 * 
-	 * @param vorname Vorname des Lieferers
-	 * @param liefererId Lieferer ID
+	 * @param vorname
+	 *            Vorname des Lieferers
+	 * @param liefererId
+	 *            Lieferer ID
 	 */
 	public void newLieferer(Connection conn, String vorname, int liefererId) {
 		String passwort = "letmein";
@@ -178,11 +192,16 @@ public class DBVerwaltung {
 
 	}
 
+	/**
+	 * print number of Lieferer
+	 * 
+	 * @param conn
+	 * @param idLieferbezirk
+	 */
 	public void getAnzahlLieferer(Connection conn, int idLieferbezirk) {
 		try {
-
-			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
-					+ "where Lieferbezirk_idLieferbezirk = ?";
+			String sqlString = "SELECT count(Lieferer_idLieferer) " + "FROM `lieferer_lieferbezirk` "
+					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
@@ -192,37 +211,37 @@ public class DBVerwaltung {
 				System.out.println("Anzahl der Lieferer: " + anzahl);
 			}
 			stmt.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	public boolean LieferbezirkIstGleichNull(Connection conn, int idLieferbezirk){
-	    try {
-		String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
-				+ "where Lieferbezirk_idLieferbezirk = ?";
-		PreparedStatement stmt = conn.prepareStatement(sqlString);
-		stmt.setString(1, Integer.toString(idLieferbezirk));
-		ResultSet rs = stmt.executeQuery();
-		String anzahl = "";
-		while (rs.next()) {
-			anzahl = rs.getString(1);
+
+	public boolean LieferbezirkIstGleichNull(Connection conn, int idLieferbezirk) {
+		try {
+			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
+					+ "where Lieferbezirk_idLieferbezirk = ?";
+			PreparedStatement stmt = conn.prepareStatement(sqlString);
+			stmt.setString(1, Integer.toString(idLieferbezirk));
+			ResultSet rs = stmt.executeQuery();
+			String anzahl = "";
+			while (rs.next()) {
+				anzahl = rs.getString(1);
+			}
+			if (anzahl.equals("0")) {
+				stmt.close();
+				return true;
+
+			} else
+				stmt.close();
+			return false;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		if(anzahl.equals("0")){
-		    stmt.close();
-		    return true;
-		   
-		}else
-		    stmt.close();
-		    return false;
-		
-		
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-	    return false;
-	    
+		return false;
+
 	}
 
 	public void LieferbezirkAendern(Connection conn, int liefererID, int lieferbezirkID) {
@@ -240,6 +259,5 @@ public class DBVerwaltung {
 		}
 
 	}
-	
 
 }
