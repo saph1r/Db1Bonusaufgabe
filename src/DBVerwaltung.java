@@ -74,9 +74,8 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * Aufgabe 1a: Printe 
-	 * 
-	 * call all outputs
+	 * Aufgabe 1a: Zeige die Anzahl der Lieferer, die Anzahl der abgeschlossenen Lieferungen sowie die durchschnittliche 
+	 * Bestellsumme der ausgelieferten Bestellungen. Melde wenn Bezirk keinen Lieferer hat.
 	 * 
 	 * @param conn
 	 *            DB Connection
@@ -109,7 +108,7 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * print out Lieferer
+	 * Zeige Lieferer ID
 	 * 
 	 * @param conn
 	 * @param idLieferbezirk
@@ -137,7 +136,7 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * print number of Lieferer
+	 * "Melde wenn Bezirk keinen Lieferer hat."
 	 * 
 	 * @param conn DB Connection
 	 * @param idLieferbezirk ID des Lieferbezirks
@@ -163,6 +162,7 @@ public class DBVerwaltung {
 	}
 
 	/**
+	 * Wenn Bezirk keinen Lieferer hat gebe Meldung
 	 * 
 	 * @param conn DB Connection
 	 * @param idLieferbezirk id des Lieferbezirks
