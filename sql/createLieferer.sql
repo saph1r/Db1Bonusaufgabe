@@ -51,19 +51,20 @@ BEGIN
             telefonnummer,
             mail,
             beschreibung,
-            kontonummmer,           blz,
+            kontonummmer,
+            blz,
             bankname);
 
     INSERT INTO `Lieferer_Lieferbezirk`
     VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis);
 
-    OPEN gic
+    OPEN gic;
         WHILE done = 0 DO
             FETCH gic INTO idMarkt, plzTemp;
                 IF postlz = plzTemp
                 THEN INSERT INTO `getraenkemarkt_has_lieferer`
                      VALUES (idLieferer, idMarkt);
-                ENDIF;        
+                END IF;        
         END WHILE;
     CLOSE gic;
 
