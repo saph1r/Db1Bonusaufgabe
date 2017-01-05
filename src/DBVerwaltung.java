@@ -112,10 +112,8 @@ public class DBVerwaltung {
 	/****
 	 * Aufgabe 2b/2c
 	 * 
-	 * @param vorname
-	 *            Vorname des Lieferers
-	 * @param liefererId
-	 *            Lieferer ID
+	 * @param vorname Vorname des Lieferers
+	 * @param liefererId Lieferer ID
 	 */
 	public void newLieferer(Connection conn, String vorname, int liefererId) {
 		String passwort = "letmein";
@@ -132,7 +130,7 @@ public class DBVerwaltung {
 		String blz = "12345678";
 		String bankname = "Geldhaus";
 		int idLieferbezirk = 2;
-		String lieferzeit = "12 , ?bis 13:35 Uhr";
+		String lieferzeit = "12:00 bis 13:35 Uhr";
 		Double lieferpreis = 42.42;
 		String getraenkemarktName = "Top";
 
@@ -162,6 +160,7 @@ public class DBVerwaltung {
 			System.out.println("Lieferer erfolgreich hinzugefügt");
 		} catch (SQLException e) {
 			System.out.println("Fehler beim schreiben in die Datenbank");
+			e.printStackTrace();
 		}
 
 	}
