@@ -31,17 +31,16 @@ public class main {
 						String vorname = sc.next();
 						System.out.print("Bitte geben sie eine freie Lieferer ID ein: ");
 						int idLieferer = sc.nextInt();
-						//DBV.newLieferer(vorname, idLieferer);
+						DBV.newLieferer(conn, vorname, idLieferer);
 						break;
 					case 4:
-					    	System.out.println("Bitte geben sie zuerst die Lieferer - ID ein und danach die ID des Lieferbezirks");
-					    	System.out
-							.println("LiefererID = ");
-					    	int LiefererID = sc.nextInt();
-					    	System.out
-							.println("LieferbezirkID = ");
-					    	int LieferbezirkID = sc.nextInt();
-					    	DBV.LieferbezirkAendern(conn,LiefererID, LieferbezirkID);
+						System.out.println(
+								"Bitte geben sie zuerst die Lieferer - ID ein und danach die ID des Lieferbezirks");
+						System.out.println("LiefererID = ");
+						int LiefererID = sc.nextInt();
+						System.out.println("LieferbezirkID = ");
+						int LieferbezirkID = sc.nextInt();
+						DBV.LieferbezirkAendern(conn, LiefererID, LieferbezirkID);
 						break;
 					case 5:
 						sc.close();

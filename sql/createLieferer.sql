@@ -14,7 +14,7 @@ CREATE PROCEDURE `createLieferer`(
   IN tel varchar(15),
   IN mail varchar(45),
   IN beschreibung varchar(45),
-  IN onto_nr varchar(12),
+  IN konto_nr varchar(12),
   IN blz char(8),
   IN bankname varchar(45),
   IN lieferzeit varchar(45),
