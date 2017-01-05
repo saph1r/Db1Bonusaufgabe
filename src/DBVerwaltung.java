@@ -22,7 +22,7 @@ public class DBVerwaltung {
 
 		Connection conn = null;
 
-		// Konfiguration
+		// Konfiguration der JDBC URL
 		String host = "jdbc:mysql://localhost:3306/";
 		String dbName = "venenumbonus";
 		String username = "root";
@@ -31,23 +31,21 @@ public class DBVerwaltung {
 		String url = host + dbName + "?user=" + username + "?password=" + password;
 
 		try {
+			//Checke ob JDBC Treiber geladen werden kann
 			String treiber = "com.mysql.jdbc.Driver";
 			Class.forName(treiber);
 			System.out.println("Info: Treiber " + treiber + "[ok]");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
 
 		try {
+			//Verbindungsaufbau zu DB
 			System.out.print("Info: Verbindung zu " + url);
-			// conn = DriverManager.getConnection(url);
-			conn = DriverManager.getConnection(url, "root", "");
+			conn = DriverManager.getConnection(url);
 			System.out.println("[ok]");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-
 			e.printStackTrace();
 			return null;
 		}
@@ -64,6 +62,7 @@ public class DBVerwaltung {
 	 */
 	public Connection disconnect(Connection conn) {
 		try {
+			//Schließe Verbindung zur DB
 			conn.close();
 			conn = null;
 			System.out.println("Info: Connection geschlossen" + "[ok]");
@@ -85,8 +84,7 @@ public class DBVerwaltung {
 	public void LieferbezirkAusgabe(Connection conn, int postleitzahl) {
 		int idLieferbezirk = 0;
 
-		// Frage ob Postleitzahl g�ltig ist
-
+		// Frage ob Postleitzahl gueltig ist
 		if (postleitzahl == 39850)
 			idLieferbezirk = 1;
 		else if (postleitzahl == 39846)
@@ -95,10 +93,11 @@ public class DBVerwaltung {
 			idLieferbezirk = 3;
 		else if (postleitzahl == 39000)
 			idLieferbezirk = 4;
-		else
-			System.out.println("Ung�ltige Postleitzahl: " + postleitzahl + "\n g�ltige zahlen sind: \n" + "39850\n"
+		else //Die nachfolgenden PLZ sind zum leichteren Test in der Ausgabe enthalten
+			System.out.println("Ungueltige Postleitzahl: " + postleitzahl + "\n Moegliche Eingaben: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
 
+		//Aufruf der einzelnen Ausgaben
 		if (this.isLieferbezirkEmpty(conn, idLieferbezirk) == true) {
 			System.out.println("Lieferbezirk ohne Lieferer");
 		} else {
@@ -130,7 +129,6 @@ public class DBVerwaltung {
 			}
 			stmt.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -195,7 +193,7 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * Aufgabe 2a: Ändere den Lieferbezirk eines Lieferers
+	 * Aufgabe 2a: Aendere den Lieferbezirk eines Lieferers
 	 * 
 	 * @param conn DB Connection
 	 * @param liefererID Lieferer, der neuen Bezirk bekommt
@@ -204,8 +202,11 @@ public class DBVerwaltung {
 	public void LieferbezirkAendern(Connection conn, int liefererID, int lieferbezirkID) {
 		try {
 			String sqlString = "call LieferbezirkAendern(" + liefererID + "," + lieferbezirkID + ");";
+			
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
+			
 			ResultSet rs = stmt.executeQuery();
+			
 			System.out.println("Aenderungen Erfolgreich");
 			stmt.close();
 		} catch (SQLException e) {
@@ -221,12 +222,11 @@ public class DBVerwaltung {
 	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch
 	 * Zuweisungen
 	 * 
-	 * @param vorname
-	 *            Vorname des Lieferers
-	 * @param liefererId
-	 *            Lieferer ID
+	 * @param vorname Vorname des Lieferers
+	 * @param liefererId Lieferer ID
 	 */
 	public void newLieferer(Connection conn, String vorname, int liefererId) {
+		//Erstelle default Parameter
 		String passwort = "letmein";
 		String anrede = "Herr";
 		String nachname = "Weinzierl";
@@ -245,6 +245,7 @@ public class DBVerwaltung {
 		String getraenkemarktName = "Top";
 
 		try {
+			//Erstelle Statement mit entsprechenden Parameterzuweisungen für die Proozedur
 			CallableStatement stmt = conn
 					.prepareCall("{call createLieferer ( ? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 			stmt.setInt(1, liefererId);
