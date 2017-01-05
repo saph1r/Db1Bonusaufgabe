@@ -74,6 +74,8 @@ public class DBVerwaltung {
 	}
 
 	/**
+	 * Aufgabe 1a: Printe 
+	 * 
 	 * call all outputs
 	 * 
 	 * @param conn
@@ -132,64 +134,6 @@ public class DBVerwaltung {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch
-	 * Zuweisungen
-	 * 
-	 * @param vorname
-	 *            Vorname des Lieferers
-	 * @param liefererId
-	 *            Lieferer ID
-	 */
-	public void newLieferer(Connection conn, String vorname, int liefererId) {
-		String passwort = "letmein";
-		String anrede = "Herr";
-		String nachname = "Weinzierl";
-		String geburtstagsdatum = "2016-2-28";
-		String strasse = "Am Kehrplatz 42";
-		String wohnort = "Dortmund";
-		String plz = "44227";
-		String tel = "0231/231231";
-		String mail = "chwei012@stud.fh-dortmund.de";
-		String beschreibung = "Ganz klar volle Punktzahl verdient :P";
-		String konto_nr = "7095465";
-		String blz = "12345678";
-		String bankname = "Geldhaus";
-		String lieferzeit = "12:00 bis 13:35 Uhr";
-		Double lieferpreis = 42.42;
-		String getraenkemarktName = "Top";
-
-		try {
-			CallableStatement stmt = conn
-					.prepareCall("{call createLieferer ( ? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-			stmt.setInt(1, liefererId);
-			stmt.setString(2, passwort);
-			stmt.setString(3, anrede);
-			stmt.setString(4, vorname);
-			stmt.setString(5, nachname);
-			stmt.setString(6, geburtstagsdatum);
-			stmt.setString(7, strasse);
-			stmt.setString(8, wohnort);
-			stmt.setString(9, plz);
-			stmt.setString(10, tel);
-			stmt.setString(11, mail);
-			stmt.setString(12, beschreibung);
-			stmt.setString(13, konto_nr);
-			stmt.setString(14, blz);
-			stmt.setString(15, bankname);
-			stmt.setString(16, lieferzeit);
-			stmt.setDouble(17, lieferpreis);
-			stmt.setString(18, getraenkemarktName);
-
-			stmt.executeUpdate();
-			System.out.println("Lieferer erfolgreich hinzugefügt");
-		} catch (SQLException e) {
-			System.out.println("Fehler beim schreiben in die Datenbank");
-			e.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -271,6 +215,63 @@ public class DBVerwaltung {
 
 		}
 
+	}
+	
+	/**
+	 * Aufgabe 2b/2c: Neuen Lieferer hinzufügen und dabei automatisch
+	 * Zuweisungen
+	 * 
+	 * @param vorname
+	 *            Vorname des Lieferers
+	 * @param liefererId
+	 *            Lieferer ID
+	 */
+	public void newLieferer(Connection conn, String vorname, int liefererId) {
+		String passwort = "letmein";
+		String anrede = "Herr";
+		String nachname = "Weinzierl";
+		String geburtstagsdatum = "2016-2-28";
+		String strasse = "Am Kehrplatz 42";
+		String wohnort = "Dortmund";
+		String plz = "44227";
+		String tel = "0231/231231";
+		String mail = "chwei012@stud.fh-dortmund.de";
+		String beschreibung = "Ganz klar volle Punktzahl verdient :P";
+		String konto_nr = "7095465";
+		String blz = "12345678";
+		String bankname = "Geldhaus";
+		String lieferzeit = "12:00 bis 13:35 Uhr";
+		Double lieferpreis = 42.42;
+		String getraenkemarktName = "Top";
+
+		try {
+			CallableStatement stmt = conn
+					.prepareCall("{call createLieferer ( ? , ? , ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			stmt.setInt(1, liefererId);
+			stmt.setString(2, passwort);
+			stmt.setString(3, anrede);
+			stmt.setString(4, vorname);
+			stmt.setString(5, nachname);
+			stmt.setString(6, geburtstagsdatum);
+			stmt.setString(7, strasse);
+			stmt.setString(8, wohnort);
+			stmt.setString(9, plz);
+			stmt.setString(10, tel);
+			stmt.setString(11, mail);
+			stmt.setString(12, beschreibung);
+			stmt.setString(13, konto_nr);
+			stmt.setString(14, blz);
+			stmt.setString(15, bankname);
+			stmt.setString(16, lieferzeit);
+			stmt.setDouble(17, lieferpreis);
+			stmt.setString(18, getraenkemarktName);
+
+			stmt.executeUpdate();
+			System.out.println("Lieferer erfolgreich hinzugefügt");
+		} catch (SQLException e) {
+			System.out.println("Fehler beim schreiben in die Datenbank");
+			e.printStackTrace();
+		}
 	}
 
 }
