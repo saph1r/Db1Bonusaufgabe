@@ -74,7 +74,7 @@ public class DBVerwaltung {
 		    + "39001\n" + "39000\n");
 
 	try {
-	    if (((Number) this.getAnzahlLieferer(conn, idLieferbezirk).getObject(1)).intValue() != 0) {
+	    if (((Number) this.getAnzahlLieferer(conn, idLieferbezirk).getObject(1)).intValue() == 0) {
 	        System.out.println("Lieferbezirk ohne Lieferer");
 	        return;
 	    }
