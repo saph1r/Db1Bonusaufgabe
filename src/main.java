@@ -34,6 +34,14 @@ public class main {
 						//DBV.newLieferer(vorname, idLieferer);
 						break;
 					case 4:
+					    	System.out.println("Bitte geben sie zuerst die Lieferer - ID ein und danach die ID des Lieferbezirks");
+					    	System.out
+							.println("LiefererID = ");
+					    	int LiefererID = sc.nextInt();
+					    	System.out
+							.println("LieferbezirkID = ");
+					    	int LieferbezirkID = sc.nextInt();
+					    	DBV.LieferbezirkAendern(conn,LiefererID, LieferbezirkID);
 						break;
 					case 5:
 						sc.close();
@@ -66,7 +74,7 @@ public class main {
 		System.out.println("[1] Statusübersicht des Lieferbezirks");
 		System.out.println("[2] Auslastung der Lieferer im Bezirk");
 		System.out.println("[3] Neuen Lieferer hinzufügen");
-		System.out.println("[4] Lieferer neuen Lieferbezirk zuweisen");
+		System.out.println("[4] Lieferer neuen Lieferbezirk zuweisen - 2a");
 		System.out.println("[5] Beenden");
 		System.out.println("Bitte eine Zahl von 1-5 angeben!");
 		System.out.print("Bitte Option wählen: ");

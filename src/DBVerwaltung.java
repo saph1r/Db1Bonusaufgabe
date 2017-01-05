@@ -138,5 +138,25 @@ public class DBVerwaltung {
 	}
 	return null;
     }
+
+    public void LieferbezirkAendern(Connection conn, int liefererID, int lieferbezirkID) {
+	try {
+
+	    String sqlString = "call LieferbezirkAendern(" + liefererID + "," + lieferbezirkID + ");";
+
+	    PreparedStatement stmt = conn.prepareStatement(sqlString);
+	    
+
+	    ResultSet rs = stmt.executeQuery();
+	    System.out.println("Änderungen Erfolgreich");
+	    stmt.close();
+	} catch (SQLException e) {
+	    // TODO Auto-generated catch block
+	    System.out.println("Kein Getränkemarkt im Lieferbezirk Vorhanden");
+	    System.out.println("Wählen Sie einen anderen Lieferbezirk!");
+	    e.printStackTrace();
+	}
+	
+    }
 }
 
