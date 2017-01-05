@@ -73,9 +73,14 @@ public class DBVerwaltung {
 		    + "\n gültige zahlen sind: \n" + "39850\n" + "39846\n"
 		    + "39001\n" + "39000\n");
 
-	if (this.getAnzahlLieferer(conn, idLieferbezirk)) {
-	    System.out.println("Lieferbezirk ohne Lieferer");
-	    return;
+	try {
+	    if (((Number) this.getAnzahlLieferer(conn, idLieferbezirk).getObject(1)).intValue() != 0) {
+	        System.out.println("Lieferbezirk ohne Lieferer");
+	        return;
+	    }
+	} catch (SQLException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 	this.getAnzahlLieferer(conn, idLieferbezirk);
 	this.getLieferer(conn, idLieferbezirk);
@@ -134,3 +139,4 @@ public class DBVerwaltung {
 	return null;
     }
 }
+
