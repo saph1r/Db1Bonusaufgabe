@@ -92,18 +92,12 @@ public class DBVerwaltung {
 			System.out.println("Ung�ltige Postleitzahl: " + postleitzahl + "\n g�ltige zahlen sind: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
 
-		try {
-			if (((Number) this.getAnzahlLieferer(conn, idLieferbezirk).getObject(1)).intValue() == 0) {
-				System.out.println("Lieferbezirk ohne Lieferer");
-				return;
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if(this.LieferbezirkIstGleichNull(conn, idLieferbezirk) == true){
+		    System.out.println("Lieferbezirk ohne Lieferer");
+		}else{
 		this.getAnzahlLieferer(conn, idLieferbezirk);
 		this.getLieferer(conn, idLieferbezirk);
-
+		}
 	}
 
 	public void getLieferer(Connection conn, int idLieferbezirk) {
@@ -184,7 +178,7 @@ public class DBVerwaltung {
 
 	}
 
-	public ResultSet getAnzahlLieferer(Connection conn, int idLieferbezirk) {
+	public void getAnzahlLieferer(Connection conn, int idLieferbezirk) {
 		try {
 
 			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
@@ -192,22 +186,43 @@ public class DBVerwaltung {
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
-			System.out.println(idLieferbezirk);
-
 			ResultSet rs = stmt.executeQuery();
-
 			while (rs.next()) {
 				String anzahl = rs.getString(1);
-				// interne Datenkonvertierung: Integer.toString(rs.getInt(1))
-
-				System.out.println("Anzahl: " + anzahl);
+				System.out.println("Anzahl der Lieferer: " + anzahl);
 			}
 			stmt.close();
-			return rs;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+	}
+	public boolean LieferbezirkIstGleichNull(Connection conn, int idLieferbezirk){
+	    try {
+		String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
+				+ "where Lieferbezirk_idLieferbezirk = ?";
+		PreparedStatement stmt = conn.prepareStatement(sqlString);
+		stmt.setString(1, Integer.toString(idLieferbezirk));
+		ResultSet rs = stmt.executeQuery();
+		String anzahl = "";
+		while (rs.next()) {
+			anzahl = rs.getString(1);
+		}
+		if(anzahl.equals("0")){
+		    stmt.close();
+		    return true;
+		   
+		}else
+		    stmt.close();
+		    return false;
+		
+		
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	    return false;
+	    
 	}
 
 	public void LieferbezirkAendern(Connection conn, int liefererID, int lieferbezirkID) {
@@ -215,15 +230,16 @@ public class DBVerwaltung {
 			String sqlString = "call LieferbezirkAendern(" + liefererID + "," + lieferbezirkID + ");";
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			ResultSet rs = stmt.executeQuery();
-			System.out.println("Änderungen Erfolgreich");
+			System.out.println("Aenderungen Erfolgreich");
 			stmt.close();
 		} catch (SQLException e) {
-			System.out.println("Kein Getränkemarkt im Lieferbezirk Vorhanden");
-			System.out.println("Wählen Sie einen anderen Lieferbezirk!");
+			System.out.println("Kein Getraenkemarkt im Lieferbezirk Vorhanden");
+			System.out.println("Waehlen Sie einen anderen Lieferbezirk!");
 			e.printStackTrace();
 
 		}
 
 	}
+	
 
 }
