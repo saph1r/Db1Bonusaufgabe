@@ -22,18 +22,13 @@ public class main {
 						DBV.LieferbezirkAusgabe(conn, plz);
 						break;
 					case 2:
-						System.out.println("Bitte geben sie eine Postleitzahl ein :");
-						plz = sc.nextInt();
-						// DBV.LieferbezirksAuslastung(conn, plz)
-						break;
-					case 3:
 						System.out.print("Bitte geben sie einen Vornamen ein: ");
 						String vorname = sc.next();
 						System.out.print("Bitte geben sie eine freie Lieferer ID ein: ");
 						int idLieferer = sc.nextInt();
 						DBV.newLieferer(conn, vorname, idLieferer);
 						break;
-					case 4:
+					case 3:
 						System.out.println(
 								"Bitte geben sie zuerst die Lieferer - ID ein und danach die ID des Lieferbezirks");
 						System.out.println("LiefererID = ");
@@ -42,9 +37,9 @@ public class main {
 						int LieferbezirkID = sc.nextInt();
 						DBV.LieferbezirkAendern(conn, LiefererID, LieferbezirkID);
 						break;
-					case 5:
+					case 4:
 						sc.close();
-						// DBV.disconnect(conn);
+						DBV.disconnect(conn);
 						System.exit(0);
 						break;
 					}
@@ -70,11 +65,10 @@ public class main {
 				"\\_____|_|\\___|_| \\___|_|  |___/\\___|_|    \\_/ |_|\\___\\___|  \\___/ \\___|_| |_|\\___|_| |_|\\__,_|_| |_| |_|");
 		System.out.println(
 				"========================================================================================================");
-		System.out.println("[1] Statusübersicht des Lieferbezirks");
-		System.out.println("[2] Auslastung der Lieferer im Bezirk");
-		System.out.println("[3] Neuen Lieferer hinzufügen");
-		System.out.println("[4] Lieferer neuen Lieferbezirk zuweisen - 2a");
-		System.out.println("[5] Beenden");
+		System.out.println("[1] Auslastung der Lieferer");
+		System.out.println("[2] Neuen Lieferer hinzufügen");
+		System.out.println("[3] Lieferer neuen Lieferbezirk zuweisen - 2a");
+		System.out.println("[45] Beenden");
 		System.out.println("Bitte eine Zahl von 1-5 angeben!");
 		System.out.print("Bitte Option wählen: ");
 	}
