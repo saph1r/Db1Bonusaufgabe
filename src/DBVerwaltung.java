@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.CallableStatement;
 
 /**
@@ -109,16 +108,29 @@ public class DBVerwaltung {
 		}
 	}
 
+	/**
+	 * "die Anzahl der abgeschlossenen Lieferungen"
+	 * 
+	 * @param conn
+	 *            DB Connection
+	 * @param idLieferbezirk
+	 *            id des Lieferbezirks
+	 * @return liefert Anzahl der abgeschlossenen Lieferungen zurück
+	 */
 	public int getAnzahlAbgeschlosseneLieferungen(Connection conn, int idLieferbezirk) {
 		int anzahlLieferbestaetigungen = 0;
 		try {
 
-			String sqlString = "select count(liefererbestaetigung.idLiefererbestaetigung) "
-					+ "from liefererbestaetigung join lieferer_lieferbezirk "
-					+ "on lieferer_lieferbezirk.Lieferer_idLieferer = liefererbestaetigung.Lieferer_idLieferer "
-					+ "join bestellung " + "on liefererbestaetigung.Bestellung_idBestellung = bestellung.idBestellung "
-					+ "where lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk = ? "
-					+ "and bestellung.bestellstatus = 'abgeschlossen' ";
+			// Erfasse die Anzahl der Abgeschlossen Lieferungen aus einem
+			// Leiferbezirk,
+			// indem lieferbestaetigungen und Lieferbezirk sowie bestellung
+			// gejoint werden
+			String sqlString = "SELECT count(liefererbestaetigung.idLiefererbestaetigung) "
+					+ "FROM liefererbestaetigung JOIN lieferer_lieferbezirk "
+					+ "ON lieferer_lieferbezirk.Lieferer_idLieferer = liefererbestaetigung.Lieferer_idLieferer "
+					+ "JOIN bestellung " + "ON liefererbestaetigung.Bestellung_idBestellung = bestellung.idBestellung "
+					+ "WHERE lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk = ? "
+					+ "AND bestellung.bestellstatus = 'abgeschlossen' ";
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
@@ -126,13 +138,11 @@ public class DBVerwaltung {
 
 			while (rs.next()) {
 				anzahlLieferbestaetigungen = rs.getInt(1);
-				// anzahlLieferbestaetigungen = Integer.toString(rs.getInt(1));
 			}
 
 			stmt.close();
 			return anzahlLieferbestaetigungen;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return anzahlLieferbestaetigungen;
@@ -144,15 +154,21 @@ public class DBVerwaltung {
 			int anzahlLieferbestaetigungen = getAnzahlAbgeschlosseneLieferungen(conn, idLieferbezirk);
 			System.out.println("Anzahl der Lieferbestaetigungen fuer den Lieferbezirk: " + anzahlLieferbestaetigungen);
 
-			String sqlString = "select sum(artikel.preis * bestellposition.anzahl) "
-					+ "from artikel JOIN bestellposition " + "on artikel.idArtikel = bestellposition.Artikel_idArtikel "
-					+ "JOIN bestellung " + "on bestellposition.Bestellung_idBestellung = bestellung.idBestellung "
-					+ "left join liefererbestaetigung "
-					+ "on bestellung.idBestellung = liefererbestaetigung.Bestellung_idBestellung "
-					+ "join lieferer_lieferbezirk "
-					+ "on liefererbestaetigung.Lieferer_idLieferer = lieferer_lieferbezirk.Lieferer_idLieferer "
-					+ "where bestellung.bestellstatus = 'abgeschlossen' "
-					+ "and lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk= ? " + "order by artikel.idArtikel";
+			// Erfasse die Summe von Anzahl der bestellten Artikel mal den
+			// Artikelpreis, joine dafür vgl. oben so,dass abschlossene
+			// Lieferungen einem Lieferbezirk erfasst werden und mit den
+			// Artikeln sowie Bestellpositionen abgegelichen und vereinigt
+			// werden können
+			String sqlString = "SELECT sum(artikel.preis * bestellposition.anzahl) "
+					+ "FROM artikel JOIN bestellposition " + "on artikel.idArtikel = bestellposition.Artikel_idArtikel "
+					+ "JOIN bestellung " + "ON bestellposition.Bestellung_idBestellung = bestellung.idBestellung "
+					+ "LEFT JOIN liefererbestaetigung "
+					+ "ON bestellung.idBestellung = liefererbestaetigung.Bestellung_idBestellung "
+					+ "JOIN lieferer_lieferbezirk "
+					+ "ON liefererbestaetigung.Lieferer_idLieferer = lieferer_lieferbezirk.Lieferer_idLieferer "
+					+ "WHERE bestellung.bestellstatus = 'abgeschlossen' "
+					+ "AND lieferer_lieferbezirk.Lieferbezirk_idLieferbezirk= ? " + "order by artikel.idArtikel";
+
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
 			ResultSet rs = stmt.executeQuery();
@@ -166,7 +182,6 @@ public class DBVerwaltung {
 			stmt.close();
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -182,8 +197,6 @@ public class DBVerwaltung {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				String idLieferer = rs.getString(1);
-				// interne Datenkonvertierung: Integer.toString(rs.getInt(1));
-
 				System.out.println("idLieferer: " + idLieferer);
 			}
 			stmt.close();
@@ -230,12 +243,15 @@ public class DBVerwaltung {
 	 */
 	public boolean isLieferbezirkEmpty(Connection conn, int idLieferbezirk) {
 		try {
-			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
-					+ "where Lieferbezirk_idLieferbezirk = ?";
+			String sqlString = "SELECT count(Lieferer_idLieferer) " + "FROM `lieferer_lieferbezirk` "
+					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
+
+			// ausführen
 			ResultSet rs = stmt.executeQuery();
 			String anzahl = "";
+			// null guard
 			while (rs.next()) {
 				anzahl = rs.getString(1);
 			}
@@ -250,7 +266,6 @@ public class DBVerwaltung {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
 
 	/**
@@ -263,17 +278,19 @@ public class DBVerwaltung {
 	 */
 	public void printAnzahlLieferer(Connection conn, int idLieferbezirk) {
 		try {
-			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
-					+ "where Lieferbezirk_idLieferbezirk = ?";
+			String sqlString = "SELECT count(Lieferer_idLieferer) " + "FROM `lieferer_lieferbezirk` "
+					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 			stmt.setString(1, Integer.toString(idLieferbezirk));
+
+			// ausführen
 			ResultSet rs = stmt.executeQuery();
+			// NULL guard
 			while (rs.next()) {
 				String anzahl = rs.getString(1);
 				System.out.println("Anzahl der Lieferer: " + anzahl);
 			}
-			stmt.close();
 
 			stmt.close();
 		} catch (SQLException e) {
@@ -298,6 +315,7 @@ public class DBVerwaltung {
 
 			PreparedStatement stmt = conn.prepareStatement(sqlString);
 
+			// ausführen und schließen
 			ResultSet rs = stmt.executeQuery();
 
 			System.out.println("Aenderungen Erfolgreich");
@@ -363,8 +381,11 @@ public class DBVerwaltung {
 			stmt.setDouble(17, lieferpreis);
 			stmt.setString(18, getraenkemarktName);
 
+			// ausführen und schließen
 			stmt.executeUpdate();
+
 			System.out.println("Lieferer erfolgreich hinzugefuegt");
+			stmt.close();
 		} catch (SQLException e) {
 			System.out.println("Fehler beim schreiben in die Datenbank");
 			e.printStackTrace();
