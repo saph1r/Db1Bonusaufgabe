@@ -41,10 +41,10 @@ VALUES (idLieferer,
         bankname);
 
 INSERT INTO `Lieferer_Lieferbezirk`
-VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis)
+VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis);
 
 INSERT INTO `getraenkemarkt_has_lieferer`
-VALUES (idLieferer, idGetraenkemarkt)
+VALUES (idLieferer, idGetraenkemarkt);
 
 END$$
 
