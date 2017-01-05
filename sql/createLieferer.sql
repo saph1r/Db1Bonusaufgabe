@@ -10,7 +10,7 @@ CREATE PROCEDURE `createLieferer`(
   IN geburtsdatum date,
   IN strasse varchar(45),
   IN wohnort varchar(45),
-  IN plz char(5),
+  IN liefererPlz char(5),
   IN tel varchar(15),
   IN mail varchar(45),
   IN beschreibung varchar(45),
@@ -23,20 +23,21 @@ CREATE PROCEDURE `createLieferer`(
 BEGIN
     DECLARE idMarkt INT;        #idGetraenkemarkt
     DECLARE done INT DEFAULT 0; #Hilfsvariable
-    DECLARE postlz CHAR(5);     #Postleitzahl des Lieferbezirks
+    DECLARE marktPlz CHAR(5);   #Postleitzahl des Getraenkemarkts
     DECLARE plzTemp CHAR(5);    #Temp PLZ
     DECLARE idBezirk int(10);   #ID des Lieferbezirks
     DECLARE gic CURSOR FOR      #GetränkeIdCursor
         SELECT idGetraenkemarkt, plz
-        FROM getraenkemarkt;
+        FROM getraenkemarkt;    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
-    SELECT plz INTO postlz
+    SELECT plz INTO marktPlz
     FROM getraenkemarkt
     WHERE name=getraenkemarktName;
 
     SELECT idLieferbezirk INTO idBezirk
     FROM lieferbezirk
-    WHERE plz = postlz;
+    WHERE plz = marktPlz;
 
     INSERT INTO `lieferer`
     VALUES (idLieferer,
@@ -47,7 +48,7 @@ BEGIN
             geburtsdatum,
             strasse,
             wohnort,
-            plz,
+            LiefererPlz,
             tel,
             mail,
             beschreibung,
@@ -61,7 +62,7 @@ BEGIN
     OPEN gic;
         WHILE done = 0 DO
             FETCH gic INTO idMarkt, plzTemp;
-                IF postlz = plzTemp
+                IF marktPlz = plzTemp
                 THEN INSERT INTO `getraenkemarkt_has_lieferer`
                      VALUES (idLieferer, idMarkt);
                 END IF;        
@@ -70,4 +71,4 @@ BEGIN
 
 END $$
 
-DELIMITER ;#
+DELIMITER ;
