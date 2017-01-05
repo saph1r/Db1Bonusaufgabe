@@ -98,7 +98,7 @@ public class DBVerwaltung {
 			System.out.println("Ung�ltige Postleitzahl: " + postleitzahl + "\n g�ltige zahlen sind: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
 
-		if (this.LieferbezirkIstGleichNull(conn, idLieferbezirk) == true) {
+		if (this.isLieferbezirkEmpty(conn, idLieferbezirk) == true) {
 			System.out.println("Lieferbezirk ohne Lieferer");
 		} else {
 			this.getAnzahlLieferer(conn, idLieferbezirk);
@@ -195,8 +195,8 @@ public class DBVerwaltung {
 	/**
 	 * print number of Lieferer
 	 * 
-	 * @param conn
-	 * @param idLieferbezirk
+	 * @param conn DB Connection
+	 * @param idLieferbezirk ID des Lieferbezirks
 	 */
 	public void getAnzahlLieferer(Connection conn, int idLieferbezirk) {
 		try {
@@ -218,7 +218,13 @@ public class DBVerwaltung {
 
 	}
 
-	public boolean LieferbezirkIstGleichNull(Connection conn, int idLieferbezirk) {
+	/**
+	 * 
+	 * @param conn DB Connection
+	 * @param idLieferbezirk id des Lieferbezirks
+	 * @return true wenn Lieferbezirk keine Lieferer hat
+	 */
+	public boolean isLieferbezirkEmpty(Connection conn, int idLieferbezirk) {
 		try {
 			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
 					+ "where Lieferbezirk_idLieferbezirk = ?";
@@ -244,6 +250,13 @@ public class DBVerwaltung {
 
 	}
 
+	/**
+	 * Aufgabe 2a: Ändere den Lieferbezirk eines Lieferers
+	 * 
+	 * @param conn DB Connection
+	 * @param liefererID Lieferer, der neuen Bezirk bekommt
+	 * @param lieferbezirkID neuer Bezirk des Lieferers
+	 */
 	public void LieferbezirkAendern(Connection conn, int liefererID, int lieferbezirkID) {
 		try {
 			String sqlString = "call LieferbezirkAendern(" + liefererID + "," + lieferbezirkID + ");";
