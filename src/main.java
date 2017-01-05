@@ -22,7 +22,7 @@ public class main {
 					int opt = sc.nextInt();
 					switch (opt) {
 					case 1:
-						System.out.println("Bitte geben sie eine Postleitzahl ein :");
+						System.out.print("Bitte geben sie eine Postleitzahl ein :");
 						plz = sc.nextInt();
 						DBV.LieferbezirkAusgabe(conn, plz);
 						break;
@@ -34,11 +34,9 @@ public class main {
 						DBV.newLieferer(conn, vorname, idLieferer);
 						break;
 					case 3:
-						System.out.println(
-								"Bitte geben sie zuerst die Lieferer - ID ein und danach die ID des Lieferbezirks");
-						System.out.println("LiefererID = ");
+						System.out.print("LiefererID: ");
 						int LiefererID = sc.nextInt();
-						System.out.println("LieferbezirkID = ");
+						System.out.print("LieferbezirkID: ");
 						int LieferbezirkID = sc.nextInt();
 						DBV.LieferbezirkAendern(conn, LiefererID, LieferbezirkID);
 						break;
