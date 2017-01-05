@@ -34,7 +34,7 @@ BEGIN
     FROM getraenkemarkt
     WHERE name=getraenkemarktName;
 
-    SELECT idLiefererbezirk INTO idBezirk
+    SELECT idLieferbezirk INTO idBezirk
     FROM lieferbezirk
     WHERE plz = postlz;
 
