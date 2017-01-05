@@ -97,7 +97,7 @@ public class DBVerwaltung {
 			System.out.println("Ungueltige Postleitzahl: " + postleitzahl + "\n Moegliche Eingaben: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
 
-		if(this.LieferbezirkIstGleichNull(conn, idLieferbezirk) == true){
+		if(this.isLieferbezirkEmpty(conn, idLieferbezirk) == true){
 		    System.out.println("Lieferbezirk ohne Lieferer");
 		}else{
 		this.printAnzahlLieferer(conn, idLieferbezirk);
@@ -179,32 +179,6 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * "Melde wenn Bezirk keinen Lieferer hat."
-	 * 
-	 * @param conn DB Connection
-	 * @param idLieferbezirk ID des Lieferbezirks
-	 */
-	public void getAnzahlLieferer(Connection conn, int idLieferbezirk) {
-		try {
-			String sqlString = "SELECT count(Lieferer_idLieferer) " + "FROM `lieferer_lieferbezirk` "
-					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
-
-			PreparedStatement stmt = conn.prepareStatement(sqlString);
-			stmt.setString(1, Integer.toString(idLieferbezirk));
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				String anzahl = rs.getString(1);
-				System.out.println("Anzahl der Lieferer: " + anzahl);
-			}
-			stmt.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
 	 * Wenn Bezirk keinen Lieferer hat gebe Meldung
 	 * 
 	 * @param conn DB Connection
@@ -235,6 +209,34 @@ public class DBVerwaltung {
 		}
 		return false;
 
+	}
+
+	/**
+	 * "Melde wenn Bezirk keinen Lieferer hat."
+	 * 
+	 * @param conn DB Connection
+	 * @param idLieferbezirk ID des Lieferbezirks
+	 */
+	public void printAnzahlLieferer(Connection conn, int idLieferbezirk) {
+		try {
+
+			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
+					+ "where Lieferbezirk_idLieferbezirk = ?";
+
+			PreparedStatement stmt = conn.prepareStatement(sqlString);
+			stmt.setString(1, Integer.toString(idLieferbezirk));
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				String anzahl = rs.getString(1);
+				System.out.println("Anzahl der Lieferer: " + anzahl);
+			}
+			stmt.close();
+			
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println("Fehler beim schreiben in die Datenbank");
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -320,27 +322,4 @@ public class DBVerwaltung {
 		}
 
 	}
-
-	public void printAnzahlLieferer(Connection conn, int idLieferbezirk) {
-		try {
-
-			String sqlString = "SELECT count(Lieferer_idLieferer) " + "from `lieferer_lieferbezirk` "
-					+ "where Lieferbezirk_idLieferbezirk = ?";
-
-			PreparedStatement stmt = conn.prepareStatement(sqlString);
-			stmt.setString(1, Integer.toString(idLieferbezirk));
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				String anzahl = rs.getString(1);
-				System.out.println("Anzahl der Lieferer: " + anzahl);
-			}
-			stmt.close();
-			
-			stmt.close();
-		} catch (SQLException e) {
-			System.out.println("Fehler beim schreiben in die Datenbank");
-			e.printStackTrace();
-		}
-	}
-
 }
