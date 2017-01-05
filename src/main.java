@@ -71,7 +71,7 @@ public class main {
 		System.out.println("[1] Auslastung der Lieferer");
 		System.out.println("[2] Neuen Lieferer hinzufügen");
 		System.out.println("[3] Lieferer neuen Lieferbezirk zuweisen - 2a");
-		System.out.println("[45] Beenden");
+		System.out.println("[4] Beenden");
 		System.out.println("Bitte eine Zahl von 1-5 angeben!");
 		System.out.print("Bitte Option wählen: ");
 	}
