@@ -17,35 +17,56 @@ CREATE PROCEDURE `createLieferer`(
   IN onto_nr varchar(12),
   IN blz char(8),
   IN bankname varchar(45),
-  IN idLieferbezierk int(10),
   IN lieferzeit varchar(45),
   IN lieferpreis double,
-  IN idGetraenkemarkt int(10))
+  IN getraenkemarktName varchar(45))
 BEGIN
-    
-INSERT INTO `lieferer`
-VALUES (idLieferer,
-        passwort,
-        anrede,
-        vorname,
-        nachname, 
-        geburtstagsdatum,
-        strasse,
-        wohnort,
-        plz,
-        telefonnummer,
-        mail,
-        beschreibung,
-        kontonummmer,
-        blz,
-        bankname);
+    DECLARE idMarkt INT;        #idGetraenkemarkt
+    DECLARE done INT DEFAULT 0; #Hilfsvariable
+    DECLARE postlz CHAR(5);     #Postleitzahl des Lieferbezirks
+    DECLARE plzTemp CHAR(5);    #Temp PLZ
+    DECLARE idBezirk int(10);   #ID des Lieferbezirks
+    DECLARE gic CURSOR FOR      #GetränkeIdCursor
+        SELECT idGetraenkemarkt, plz
+        FROM getraenkemarkt;
 
-INSERT INTO `Lieferer_Lieferbezirk`
-VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis);
+    SELECT plz INTO postlz
+    FROM getraenkemarkt
+    WHERE name=getraenkemarktName;
 
-INSERT INTO `getraenkemarkt_has_lieferer`
-VALUES (idLieferer, idGetraenkemarkt);
+    SELECT idLiefererbezirk INTO idBezirk
+    FROM lieferbezirk
+    WHERE plz = postlz;
 
-END$$
+    INSERT INTO `lieferer`
+    VALUES (idLieferer,
+            passwort,
+            anrede,
+            vorname,
+            nachname, 
+            geburtstagsdatum,
+            strasse,
+            wohnort,
+            plz,
+            telefonnummer,
+            mail,
+            beschreibung,
+            kontonummmer,           blz,
+            bankname);
 
-DELIMITER ;
+    INSERT INTO `Lieferer_Lieferbezirk`
+    VALUES (idLieferbezirk, idLieferer, lieferzeit, lieferpreis);
+
+    OPEN gic
+        WHILE done = 0 DO
+            FETCH gic INTO idMarkt, plzTemp;
+                IF postlz = plzTemp
+                THEN INSERT INTO `getraenkemarkt_has_lieferer`
+                     VALUES (idLieferer, idMarkt);
+                ENDIF;        
+        END WHILE;
+    CLOSE gic;
+
+END $$
+
+DELIMITER ;#
