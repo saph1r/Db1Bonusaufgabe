@@ -93,10 +93,9 @@ public class DBVerwaltung {
 			idLieferbezirk = 3;
 		else if (postleitzahl == 39000)
 			idLieferbezirk = 4;
-		else // Die nachfolgenden PLZ sind zum leichteren Test in der Ausgabe
-				// enthalten
-			System.out.println("Ungueltige Postleitzahl: " + postleitzahl + "\n Moegliche Eingaben: \n" + "39850\n"
+		else System.out.println("Ungueltige Postleitzahl: " + postleitzahl + "\n Moegliche Eingaben: \n" + "39850\n"
 					+ "39846\n" + "39001\n" + "39000\n");
+		// Die nachfolgenden PLZ sind zum leichteren Test in der Ausgabe enthalten
 
 		if (this.isLieferbezirkEmpty(conn, idLieferbezirk) == true) {
 			System.out.println("Lieferbezirk ohne Lieferer");
@@ -109,7 +108,35 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * "die Anzahl der abgeschlossenen Lieferungen"
+	 * Ausgabe der Lieferer Informationen
+	 * 
+	 * @param conn
+	 *            DB Connection
+	 * @param idLieferbezirk
+	 *            id des betreffenden Lieferbezirks
+	 */
+	public void printLieferer(Connection conn, int idLieferbezirk) {
+		try {
+			//Hole Lieferer ID(s) zu entsprechendem Lieferbezirk 
+			String sqlString = "SELECT Lieferer_idLieferer " + "FROM `lieferer_lieferbezirk` "
+					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
+
+			PreparedStatement stmt = conn.prepareStatement(sqlString);
+			stmt.setString(1, Integer.toString(idLieferbezirk));
+
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				String idLieferer = rs.getString(1);
+				System.out.println("idLieferer: " + idLieferer);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Erfasse "die Anzahl der abgeschlossenen Lieferungen"
 	 * 
 	 * @param conn
 	 *            DB Connection
@@ -148,6 +175,13 @@ public class DBVerwaltung {
 		return anzahlLieferbestaetigungen;
 	}
 
+	/**
+	 * Erfasse Bestellsumme um den Durchschnitt auszugeben: "sowie die
+	 * durchschnittliche Bestellsumme der ausgelieferten Bestellungen"
+	 * 
+	 * @param conn
+	 * @param idLieferbezirk
+	 */
 	public void printBestellSumme(Connection conn, int idLieferbezirk) {
 		try {
 
@@ -174,32 +208,13 @@ public class DBVerwaltung {
 			ResultSet rs = stmt.executeQuery();
 			double summe = 0;
 			while (rs.next()) {
-				summe = rs.getInt(1);
+				summe = rs.getDouble(1);
 				double durchschnitt = summe / anzahlLieferbestaetigungen;
 				System.out.println(
 						"Die durchschnittliche Bestellsumme der ausgelieferten Bestellungen ist: " + durchschnitt);
 			}
 			stmt.close();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void printLieferer(Connection conn, int idLieferbezirk) {
-		try {
-			String sqlString = "SELECT Lieferer_idLieferer " + "FROM `lieferer_lieferbezirk` "
-					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
-
-			PreparedStatement stmt = conn.prepareStatement(sqlString);
-			stmt.setString(1, Integer.toString(idLieferbezirk));
-
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				String idLieferer = rs.getString(1);
-				System.out.println("idLieferer: " + idLieferer);
-			}
-			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -215,6 +230,7 @@ public class DBVerwaltung {
 	 */
 	public void getAnzahlLieferer(Connection conn, int idLieferbezirk) {
 		try {
+			
 			String sqlString = "SELECT count(Lieferer_idLieferer) " + "FROM `lieferer_lieferbezirk` "
 					+ "WHERE Lieferbezirk_idLieferbezirk = ?";
 
@@ -222,7 +238,7 @@ public class DBVerwaltung {
 			stmt.setString(1, Integer.toString(idLieferbezirk));
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				String anzahl = rs.getString(1);
+				int anzahl = rs.getInt(1);
 				System.out.println("Anzahl der Lieferer: " + anzahl);
 			}
 			stmt.close();
@@ -250,12 +266,12 @@ public class DBVerwaltung {
 
 			// ausführen
 			ResultSet rs = stmt.executeQuery();
-			String anzahl = "";
+			int anzahl = 0;
 			// null guard
 			while (rs.next()) {
-				anzahl = rs.getString(1);
+				anzahl = rs.getInt(1);
 			}
-			if (anzahl.equals("0")) {
+			if (anzahl == 0) {
 				stmt.close();
 				return true;
 			} else

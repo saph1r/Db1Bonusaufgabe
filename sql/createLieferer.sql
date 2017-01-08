@@ -30,15 +30,20 @@ BEGIN
         SELECT idGetraenkemarkt, plz
         FROM getraenkemarkt;    
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-
+    
+    -- Anhand des Getränkemarktnames die Postleitzahl
+    -- des Marktes ermitteln
     SELECT plz INTO marktPlz
     FROM getraenkemarkt
     WHERE name=getraenkemarktName;
 
+    -- Da die Postleitzahl des Marktes auch der 
+    -- des Lieferbezirks entspricht -> Bestimmung der ID 
     SELECT idLieferbezirk INTO idBezirk
     FROM lieferbezirk
     WHERE plz = marktPlz;
 
+    -- Neuen Lieferer hinzufügen
     INSERT INTO `lieferer`
     VALUES (idLieferer,
             passwort,
@@ -56,13 +61,18 @@ BEGIN
             blz,
             bankname);
 
+    -- Neuen Lieferer, Bezirk zuordnen
     INSERT INTO `Lieferer_Lieferbezirk`
     VALUES (idBezirk, idLieferer, lieferzeit, lieferpreis);
 
+    -- Mit dem Cursor nach Marktplätzen im gleichen Lieferbezirk suchen,
+    -- da der Lieferer alle Getränke in seinem Bezirk anfährt
     OPEN gic;
         WHILE done = 0 DO
             FETCH gic INTO idMarkt, plzTemp;
                 IF marktPlz = plzTemp
+                -- und bei Übereinstimmung entsprechend eine Relation
+                -- und Getränkemarkt setzen
                 THEN INSERT INTO `getraenkemarkt_has_lieferer`
                      VALUES (idLieferer, idMarkt);
                 END IF;        
