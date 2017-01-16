@@ -61,7 +61,7 @@ public class DBVerwaltung {
 	 */
 	public Connection disconnect(Connection conn) {
 		try {
-			// Schließe Verbindung zur DB
+			// Schliesse Verbindung zur DB
 			conn.close();
 			conn = null;
 			System.out.println("Info: Connection geschlossen" + "[ok]");
@@ -285,7 +285,7 @@ public class DBVerwaltung {
 	}
 
 	/**
-	 * "Melde wenn Bezirk keinen Lieferer hat."
+	 * "Gebe Anzahl der Lieferer aus."
 	 * 
 	 * @param conn
 	 *            DB Connection
